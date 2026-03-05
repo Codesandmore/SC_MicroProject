@@ -1,0 +1,22 @@
+# Genetic Algorithm – Study Plan Optimizer
+# Requirements
+#
+# This project uses ONLY the Python Standard Library.
+# No third-party packages are required.
+#
+# Minimum Python version: 3.8
+#
+# Standard library modules used:
+#   random    – random number generation for GA operators
+#   copy      – deep-copying chromosomes between generations
+#   threading – running the GA in a background thread (UI version)
+#   tkinter   – desktop GUI (study_planner_ui.py)
+#   os        – file path handling for export
+
+# ------------------------------------------------------------
+# If you want to extend this project with optional extras,
+# uncomment and install the packages below:
+# ------------------------------------------------------------
+
+# matplotlib>=3.7.0   # for richer fitness convergence plots
+# numpy>=1.24.0       # for vectorised chromosome operations (speed improvement)
