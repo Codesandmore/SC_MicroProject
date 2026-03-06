@@ -86,6 +86,9 @@ def fitness(schedule, config, targets):
     for i in range(n):
         if weekly_totals[i] >= targets[i]:
             score += config["exam_weight"][i] * config["difficulty"][i] * 0.5
+            excess = weekly_totals[i] - targets[i]
+            if excess > 0:
+                score -= excess * 1.5
 
     return score
 
@@ -581,7 +584,7 @@ class App(tk.Tk):
                 vals.append(f"{h:.1f}" if h > 0 else "–")
             vals.append(f"{weekly_totals[i]:.1f}")
             vals.append(f"{targets[i]:.1f}")
-            match = weekly_totals[i] / targets[i] * 100 if targets[i] > 0 else 0
+            match = min(100.0, weekly_totals[i] / targets[i] * 100 if targets[i] > 0 else 0)
             vals.append(f"{match:.0f}%")
             tag = "over" if match >= 95 else ("under" if match < 70 else "ok")
             self.sched_tree.insert("", "end", values=vals, tags=(tag,))
@@ -696,7 +699,7 @@ class App(tk.Tk):
             for d in range(7):
                 h = sched[i][d]
                 row += f"{h:>6.1f}" if h > 0 else f"{'–':>6}"
-            mp = weekly[i] / tgts[i] * 100 if tgts[i] > 0 else 0
+            mp = min(100.0, weekly[i] / tgts[i] * 100 if tgts[i] > 0 else 0)
             row += f"{weekly[i]:>7.1f}  {tgts[i]:>7.1f}  {mp:>6.0f}%"
             lines.append(row)
         lines.append("-" * len(hdr))

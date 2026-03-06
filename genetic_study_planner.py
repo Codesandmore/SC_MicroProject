@@ -243,11 +243,15 @@ def fitness(schedule, config, targets):
         if weekly_totals[i] == 0:
             score -= 10.0
 
-    # ── F4: bonus for priority subjects ──────────────────────────
+    # ── F4: bonus for priority subjects (only when exactly on target) ────
     for i in range(n):
         w = config["exam_weight"][i] * config["difficulty"][i]
         if weekly_totals[i] >= targets[i]:
             score += w * 0.5
+            # Penalise going more than 5% over target
+            excess = weekly_totals[i] - targets[i]
+            if excess > 0:
+                score -= excess * 1.5
 
     return score
 
@@ -434,7 +438,7 @@ def print_schedule(schedule, config, targets, best_fitness):
           f"{'Assigned':>9}  {'Target':>8}  {'Match%':>7}")
     print("  " + "-" * (width + 45))
     for i in range(n):
-        match_pct = (weekly_totals[i] / targets[i] * 100) if targets[i] > 0 else 0
+        match_pct = min(100.0, (weekly_totals[i] / targets[i] * 100) if targets[i] > 0 else 0)
         print(f"  {config['subjects'][i]:<{width}} "
               f"{DIFFICULTY_LABELS[str(config['difficulty'][i])]:>6}  "
               f"{config['exam_weight'][i]:>8}  "
@@ -515,7 +519,7 @@ def export_schedule(schedule, config, targets, best_fitness, history):
     lines.append(f"  {'Subject':<{width}} {'Diff':>6}  {'Priority':>8}  "
                  f"{'Assigned':>9}  {'Target':>8}  {'Match%':>7}")
     for i in range(n):
-        match_pct = (weekly_totals[i] / targets[i] * 100) if targets[i] > 0 else 0
+        match_pct = min(100.0, (weekly_totals[i] / targets[i] * 100) if targets[i] > 0 else 0)
         lines.append(f"  {config['subjects'][i]:<{width}} "
                      f"{DIFFICULTY_LABELS[str(config['difficulty'][i])]:>6}  "
                      f"{config['exam_weight'][i]:>8}  "
